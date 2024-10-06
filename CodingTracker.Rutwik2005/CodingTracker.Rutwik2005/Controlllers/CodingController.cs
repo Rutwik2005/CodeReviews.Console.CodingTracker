@@ -2,10 +2,8 @@
 using CodingTracker.Rutwik2005.Models;
 using Dapper;
 using Microsoft.Data.Sqlite;
-using Microsoft.Extensions.Configuration;
 using Spectre.Console;
 using System.Data;
-using System.Data.SqlClient;
 
 public class CodingController
 {
@@ -41,7 +39,7 @@ public class CodingController
             if (!int.TryParse(Console.ReadLine(), out sessionId) || !Validation.SessionIdExists(sessionId))
             {
                 Console.WriteLine("Invalid Session ID. Please try again.");
-                continue; // Continue to next iteration if ID is invalid
+                continue; 
             }
 
             Console.WriteLine("Enter the new Start Time (format: yyyy-MM-dd HH:mm):");
@@ -49,7 +47,7 @@ public class CodingController
             if (!Validation.ValidateDateTimeFormat(startInput, out startTime))
             {
                 Console.WriteLine("Invalid Start Time format. Please use 'yyyy-MM-dd HH:mm'.");
-                continue; // Continue to next iteration if format is invalid
+                continue; 
             }
 
             Console.WriteLine("Enter the new End Time (format: yyyy-MM-dd HH:mm):");
@@ -57,13 +55,13 @@ public class CodingController
             if (!Validation.ValidateDateTimeFormat(endInput, out endTime))
             {
                 Console.WriteLine("Invalid End Time format. Please use 'yyyy-MM-dd HH:mm'.");
-                continue; // Continue to next iteration if format is invalid
+                continue; 
             }
 
             if (!Validation.ValidateSessionTimes(startTime, endTime))
             {
                 Console.WriteLine("End Time must be after Start Time. Please try again.");
-                continue; // Continue to next iteration if times are invalid
+                continue; 
             }
 
             
@@ -74,68 +72,64 @@ public class CodingController
                 Console.WriteLine("Session updated successfully.");
             }
 
-            flag = false; // Exit the loop after a successful update
+            flag = false; 
         }
     }
-
-public static void DisplayAllSessions()
-{
-    var sessions = GetAllCodingSessions(); // Make sure this method is implemented to fetch sessions
-
-    if (sessions.Count == 0)
+    public static void DisplayAllSessions()
     {
-        Console.WriteLine("No coding sessions found.");
-        return;
-    }
+        var sessions = GetAllCodingSessions();
 
-    // Use Spectre.Console to format the output
-    var table = new Table();
-    table.AddColumn("ID");
-    table.AddColumn("Start Time");
-    table.AddColumn("End Time");
-    table.AddColumn("Duration (Minutes)");
-
-    foreach (var session in sessions)
-    {
-        table.AddRow(
-            session.Id.ToString(),
-            session.StartTime.ToString("yyyy-MM-dd HH:mm"),
-            session.EndTime.ToString("yyyy-MM-dd HH:mm"),
-            ((int)(session.EndTime - session.StartTime).TotalMinutes).ToString()
-        );
-    }
-
-    AnsiConsole.Render(table);
-}
-
-
-public static void DeleteCodingSession()
-    {
-        // First, display all coding sessions to the user
-        DisplayAllSessions();
-
-        Console.WriteLine("\nEnter the Session ID you want to delete:");
-        int sessionId;
-        if (!int.TryParse(Console.ReadLine(), out sessionId))
+        if (sessions.Count == 0)
         {
-            Console.WriteLine("Invalid Session ID.");
+            Console.WriteLine("No coding sessions found.");
             return;
         }
 
-        // Validate if the Session ID exists
-        if (!Validation.SessionIdExists(sessionId)) // Assuming Validation.SessionIdExists validates if the session exists
+   
+        var table = new Table();
+        table.AddColumn("ID");
+        table.AddColumn("Start Time");
+        table.AddColumn("End Time");
+        table.AddColumn("Duration (Minutes)");
+
+        foreach (var session in sessions)
         {
-            Console.WriteLine("Session ID does not exist.");
-            return;
+            table.AddRow(
+                session.Id.ToString(),
+                session.StartTime.ToString("yyyy-MM-dd HH:mm"),
+                session.EndTime.ToString("yyyy-MM-dd HH:mm"),
+                ((int)(session.EndTime - session.StartTime).TotalMinutes).ToString()
+            );
         }
 
-        // Proceed with deleting the session if validation passes
-        using (var connection = new SqliteConnection(connectionString))
-        {
-            string sql = "DELETE FROM CodingSession WHERE Id = @Id;";
-            connection.Execute(sql, new { Id = sessionId });
-            Console.WriteLine($"Session with ID {sessionId} deleted successfully.");
-        }
+        AnsiConsole.Render(table);
     }
 
+
+    public static void DeleteCodingSession()
+        {
+       
+            DisplayAllSessions();
+
+            Console.WriteLine("\nEnter the Session ID you want to delete:");
+            int sessionId;
+            if (!int.TryParse(Console.ReadLine(), out sessionId))
+            {
+                Console.WriteLine("Invalid Session ID.");
+                return;
+            }
+                   
+            if (!Validation.SessionIdExists(sessionId)) 
+            {
+                Console.WriteLine("Session ID does not exist.");
+                return;
+            }
+                    
+            using (var connection = new SqliteConnection(connectionString))
+            {
+                string sql = "DELETE FROM CodingSession WHERE Id = @Id;";
+                connection.Execute(sql, new { Id = sessionId });
+                Console.WriteLine($"Session with ID {sessionId} deleted successfully.");
+            }
+        }
 }

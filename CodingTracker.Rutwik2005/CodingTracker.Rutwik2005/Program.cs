@@ -1,6 +1,6 @@
 ﻿using CodingTracker.Rutwik2005.Controlllers;
 using CodingTracker.Rutwik2005;
-using Microsoft.Data.Sqlite; // Adjust this to match your actual namespace
+using Microsoft.Data.Sqlite; 
 class Program
 {
     public static string connectionString = @"Data Source=CodingTracker.Rutwik2005.db";
@@ -14,21 +14,18 @@ class Program
             connection.Open();
             SqliteCommand sqliteCommand = connection.CreateCommand();
             var tableCmd = sqliteCommand;
-             tableCmd.CommandText = @"
-CREATE TABLE IF NOT EXISTS CodingSession (
-    Id INTEGER PRIMARY KEY AUTOINCREMENT, 
-    StartTime DATETIME NOT NULL,
-    EndTime DATETIME NOT NULL,
-    Duration INTEGER NOT NULL
-);";
+                 tableCmd.CommandText = @"
+    CREATE TABLE IF NOT EXISTS CodingSession (
+        Id INTEGER PRIMARY KEY AUTOINCREMENT, 
+        StartTime DATETIME NOT NULL,
+        EndTime DATETIME NOT NULL,
+        Duration INTEGER NOT NULL
+    );";
 
 
             tableCmd.ExecuteNonQuery();
             connection.Close();
         }
-
-
-
         DateTime startTime;
         DateTime endTime ;
         while (flag)
