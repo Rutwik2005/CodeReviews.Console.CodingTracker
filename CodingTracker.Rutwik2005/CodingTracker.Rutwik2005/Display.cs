@@ -1,14 +1,17 @@
-﻿namespace CodingTracker.Rutwik2005
+﻿using Spectre.Console;
+
+namespace CodingTracker.Rutwik2005
 {
    public class Display
     {   public static void  DisplayMenu()
         {
-            Console.WriteLine("The Following operations can be performed");
-            Console.WriteLine("Press u for update");
-            Console.WriteLine("Press d to delete");
-            Console.WriteLine("Press i to insert");
-            Console.WriteLine("Press v to view");
-            Console.WriteLine("Press e to exit");
+            AnsiConsole.MarkupLine("[bold yellow]The Following operations can be performed:[/]");
+            AnsiConsole.MarkupLine("[green]Press [[u]] for update[/]");
+            AnsiConsole.MarkupLine("[green]Press [[d]] to delete[/]");
+            AnsiConsole.MarkupLine("[green]Press [[i]] to insert[/]");
+            AnsiConsole.MarkupLine("[green]Press [[v]] to view[/]");
+            AnsiConsole.MarkupLine("[green]Press [[e]] to exit[/]");
+
         }
     }
 }

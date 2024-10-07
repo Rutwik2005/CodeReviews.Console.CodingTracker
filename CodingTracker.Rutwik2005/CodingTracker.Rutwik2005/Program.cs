@@ -6,10 +6,7 @@ class Program
     public static string connectionString = @"Data Source=CodingTracker.Rutwik2005.db";
 
    public  static void Main(string[] args)
-    {
-        bool flag = true;
-
-        using (var connection = new SqliteConnection(connectionString))
+    {   using (var connection = new SqliteConnection(connectionString))
         {
             connection.Open();
             SqliteCommand sqliteCommand = connection.CreateCommand();
@@ -26,32 +23,11 @@ class Program
             tableCmd.ExecuteNonQuery();
             connection.Close();
         }
-        DateTime startTime;
-        DateTime endTime ;
+        bool flag = true;
         while (flag)
-        {
-            string inp;
+        {   string inp;
             Display.DisplayMenu();
-            inp = Console.ReadLine().Trim().ToLower();
-            switch(inp)
-            {
-                case "v":
-                         CodingController.DisplayAllSessions();
-                         break;
-                case "i":startTime = UserInput.GetSessionTime("Enter the starttime");
-                         endTime = UserInput.GetSessionTime("Enter the endtime", startTime);
-                         CodingController.CreateCodingSession(startTime,endTime);
-                         break;
-                case "u":CodingController.UpdateCodingSession();
-                         break;
-                case "d":CodingController.DeleteCodingSession();
-                         break;
-                case "e":Console.WriteLine("Exiting the menu");
-                         flag = false;
-                         break;
-                default: Console.WriteLine("Invalid input");
-                         break;
-            }
+            flag = UserInput.switchmenu();
         }
     }
    

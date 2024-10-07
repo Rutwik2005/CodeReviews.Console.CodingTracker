@@ -64,6 +64,40 @@ namespace CodingTracker.Rutwik2005.Controlllers
             }
             return sessionId;
         }
+
+        public static bool switchmenu()
+        {
+            bool flag = true;
+            DateTime startTime;
+            DateTime endTime;
+            string inp;
+            inp = Console.ReadLine().Trim().ToLower();
+            switch (inp)
+            {
+                case "v":
+                    CodingController.DisplayAllSessions();
+                    break;
+                case "i":
+                    startTime = UserInput.GetSessionTime("Enter the starttime");
+                    endTime = UserInput.GetSessionTime("Enter the endtime", startTime);
+                    CodingController.CreateCodingSession(startTime, endTime);
+                    break;
+                case "u":
+                    CodingController.UpdateCodingSession();
+                    break;
+                case "d":
+                    CodingController.DeleteCodingSession();
+                    break;
+                case "e":
+                    Console.WriteLine("Exiting the menu");
+                    flag = false;
+                    break;
+                default:
+                    Console.WriteLine("Invalid input");
+                    break;
+            }
+            return flag;
+        }
     }
 
 }

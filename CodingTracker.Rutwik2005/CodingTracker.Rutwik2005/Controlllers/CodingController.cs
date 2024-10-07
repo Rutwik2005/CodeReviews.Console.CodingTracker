@@ -1,4 +1,5 @@
 ﻿using CodingTracker.Rutwik2005;
+using CodingTracker.Rutwik2005.Controlllers;
 using CodingTracker.Rutwik2005.Models;
 using Dapper;
 using Microsoft.Data.Sqlite;
@@ -8,6 +9,7 @@ using System.Data;
 public class CodingController
 {
     private static string connectionString = @"Data Source=CodingTracker.Rutwik2005.db";
+
     public static void CreateCodingSession(DateTime startTime, DateTime endTime)
     {
         using (IDbConnection connection = new SqliteConnection(connectionString))
@@ -15,10 +17,11 @@ public class CodingController
             var duration = endTime - startTime;
             var sql = "INSERT INTO CodingSession (StartTime, EndTime, Duration) VALUES (@StartTime, @EndTime, @Duration);";
             connection.Execute(sql, new { StartTime = startTime, EndTime = endTime, Duration = duration });
+            AnsiConsole.MarkupLine("[green]Session created successfully![/]");
         }
     }
 
-    public static  List<CodingSession> GetAllCodingSessions()
+    public static List<CodingSession> GetAllCodingSessions()
     {
         using (IDbConnection connection = new SqliteConnection(connectionString))
         {
@@ -26,66 +29,68 @@ public class CodingController
             return connection.Query<CodingSession>(sql).AsList();
         }
     }
-    public static  void UpdateCodingSession()
+
+    public static void UpdateCodingSession()
     {
-        bool flag = true; 
+        bool flag = true;
         DateTime startTime;
         DateTime endTime;
         int sessionId;
         DisplayAllSessions();
+
         while (flag)
         {
-            Console.WriteLine("Enter the Session ID you want to update:");
+            AnsiConsole.MarkupLine("[yellow]Enter the Session ID you want to update:[/]");
+
             if (!int.TryParse(Console.ReadLine(), out sessionId) || !Validation.SessionIdExists(sessionId))
             {
-                Console.WriteLine("Invalid Session ID. Please try again.");
-                continue; 
+                AnsiConsole.MarkupLine("[red]Invalid Session ID. Please try again.[/]");
+                continue;
             }
 
-            Console.WriteLine("Enter the new Start Time (format: yyyy-MM-dd HH:mm):");
+            AnsiConsole.MarkupLine("[yellow]Enter the new Start Time (format: yyyy-MM-dd HH:mm):[/]");
             string startInput = Console.ReadLine();
             if (!Validation.ValidateDateTimeFormat(startInput, out startTime))
             {
-                Console.WriteLine("Invalid Start Time format. Please use 'yyyy-MM-dd HH:mm'.");
-                continue; 
+                AnsiConsole.MarkupLine("[red]Invalid Start Time format. Please use 'yyyy-MM-dd HH:mm'.[/]");
+                continue;
             }
 
-            Console.WriteLine("Enter the new End Time (format: yyyy-MM-dd HH:mm):");
+            AnsiConsole.MarkupLine("[yellow]Enter the new End Time (format: yyyy-MM-dd HH:mm):[/]");
             string endInput = Console.ReadLine();
             if (!Validation.ValidateDateTimeFormat(endInput, out endTime))
             {
-                Console.WriteLine("Invalid End Time format. Please use 'yyyy-MM-dd HH:mm'.");
-                continue; 
+                AnsiConsole.MarkupLine("[red]Invalid End Time format. Please use 'yyyy-MM-dd HH:mm'.[/]");
+                continue;
             }
 
             if (!Validation.ValidateSessionTimes(startTime, endTime))
             {
-                Console.WriteLine("End Time must be after Start Time. Please try again.");
-                continue; 
+                AnsiConsole.MarkupLine("[red]End Time must be after Start Time. Please try again.[/]");
+                continue;
             }
 
-            
             using (var connection = new SqliteConnection(connectionString))
             {
                 string sql = "UPDATE CodingSession SET StartTime = @StartTime, EndTime = @EndTime WHERE Id = @Id;";
                 connection.Execute(sql, new { Id = sessionId, StartTime = startTime, EndTime = endTime });
-                Console.WriteLine("Session updated successfully.");
+                AnsiConsole.MarkupLine("[green]Session updated successfully.[/]");
             }
 
-            flag = false; 
+            flag = false;
         }
     }
+
     public static void DisplayAllSessions()
     {
         var sessions = GetAllCodingSessions();
 
         if (sessions.Count == 0)
         {
-            Console.WriteLine("No coding sessions found.");
+            AnsiConsole.MarkupLine("[red]No coding sessions found.[/]");
             return;
         }
 
-   
         var table = new Table();
         table.AddColumn("ID");
         table.AddColumn("Start Time");
@@ -105,31 +110,31 @@ public class CodingController
         AnsiConsole.Render(table);
     }
 
-
     public static void DeleteCodingSession()
-        {
-       
-            DisplayAllSessions();
+    {
+        DisplayAllSessions();
 
-            Console.WriteLine("\nEnter the Session ID you want to delete:");
-            int sessionId;
-            if (!int.TryParse(Console.ReadLine(), out sessionId))
-            {
-                Console.WriteLine("Invalid Session ID.");
-                return;
-            }
-                   
-            if (!Validation.SessionIdExists(sessionId)) 
-            {
-                Console.WriteLine("Session ID does not exist.");
-                return;
-            }
-                    
-            using (var connection = new SqliteConnection(connectionString))
-            {
-                string sql = "DELETE FROM CodingSession WHERE Id = @Id;";
-                connection.Execute(sql, new { Id = sessionId });
-                Console.WriteLine($"Session with ID {sessionId} deleted successfully.");
-            }
+        AnsiConsole.MarkupLine("\n[yellow]Enter the Session ID you want to delete:[/]");
+        int sessionId;
+        if (!int.TryParse(Console.ReadLine(), out sessionId))
+        {
+            AnsiConsole.MarkupLine("[red]Invalid Session ID.[/]");
+            return;
         }
+
+        if (!Validation.SessionIdExists(sessionId))
+        {
+            AnsiConsole.MarkupLine("[red]Session ID does not exist.[/]");
+            return;
+        }
+
+        using (var connection = new SqliteConnection(connectionString))
+        {
+            string sql = "DELETE FROM CodingSession WHERE Id = @Id;";
+            connection.Execute(sql, new { Id = sessionId });
+            AnsiConsole.MarkupLine($"[green]Session with ID {sessionId} deleted successfully.[/]");
+        }
+    }
 }
+    
+       
