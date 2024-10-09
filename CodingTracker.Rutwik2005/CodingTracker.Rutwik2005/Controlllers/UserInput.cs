@@ -88,6 +88,9 @@ namespace CodingTracker.Rutwik2005.Controlllers
                 case "d":
                     CodingController.DeleteCodingSession();
                     break;
+                case "sw":
+                    CodingController.TrackCodingSessionWithStopwatch();
+                    break;
                 case "e":
                     Console.WriteLine("Exiting the menu");
                     flag = false;

@@ -1,10 +1,10 @@
 ﻿using CodingTracker.Rutwik2005;
-using CodingTracker.Rutwik2005.Controlllers;
 using CodingTracker.Rutwik2005.Models;
 using Dapper;
 using Microsoft.Data.Sqlite;
 using Spectre.Console;
 using System.Data;
+
 
 public class CodingController
 {
@@ -135,6 +135,29 @@ public class CodingController
             AnsiConsole.MarkupLine($"[green]Session with ID {sessionId} deleted successfully.[/]");
         }
     }
-}
-    
+
+    public static void TrackCodingSessionWithStopwatch()
+    {
+        var stopwatch = new System.Diagnostics.Stopwatch();
+        stopwatch.Start();
+
+        DateTime startTime = DateTime.Now;
+        Console.WriteLine($"Session started at: {startTime:yyyy-MM-dd HH:mm:ss}");
+
+        Console.WriteLine("Press any key to stop the session...");
+        Console.ReadKey();
+
+        stopwatch.Stop();
+        DateTime endTime = DateTime.Now;
+
+        TimeSpan duration = stopwatch.Elapsed;
+
+        Console.WriteLine($"Session ended at: {endTime:yyyy-MM-dd HH:mm:ss}");
+        Console.WriteLine($"Duration: {duration}");
        
+        CodingController.CreateCodingSession(startTime, endTime);
+    }
+
+}
+
+

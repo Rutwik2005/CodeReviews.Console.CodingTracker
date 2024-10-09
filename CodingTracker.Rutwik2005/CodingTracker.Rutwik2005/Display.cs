@@ -11,7 +11,7 @@ namespace CodingTracker.Rutwik2005
             AnsiConsole.MarkupLine("[green]Press [[i]] to insert[/]");
             AnsiConsole.MarkupLine("[green]Press [[v]] to view[/]");
             AnsiConsole.MarkupLine("[green]Press [[e]] to exit[/]");
-
+            AnsiConsole.MarkupLine("[green]Press [[sw]] to record a session using stopwatch.[/]");
         }
     }
 }

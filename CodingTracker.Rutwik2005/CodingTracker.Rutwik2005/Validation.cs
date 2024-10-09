@@ -8,8 +8,22 @@ namespace CodingTracker.Rutwik2005
         private static string connectionString = @"Data Source=CodingTracker.Rutwik2005.db";
         public static bool ValidateDateTimeFormat(string input, out DateTime dateTime)
         {
-            return DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm", null, System.Globalization.DateTimeStyles.None, out dateTime);
+            bool isValidFormat = DateTime.TryParseExact(input, "yyyy-MM-dd HH:mm",
+                                null, System.Globalization.DateTimeStyles.None,
+                                out dateTime);
+            if (isValidFormat) 
+            {
+                if (dateTime.Year < 1 || dateTime.Year > 9999 ||
+                    dateTime.Month < 1 || dateTime.Month > 12 ||
+                    dateTime.Day < 1 || dateTime.Day > DateTime.DaysInMonth(dateTime.Year, dateTime.Month))
+                {
+                    isValidFormat = false;
+                }
+            }
+
+            return isValidFormat;
         }
+
 
         public static bool ValidateSessionTimes(DateTime startTime, DateTime endTime)
         {
