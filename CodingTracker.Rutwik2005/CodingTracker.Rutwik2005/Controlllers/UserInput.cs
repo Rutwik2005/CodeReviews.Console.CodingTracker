@@ -65,7 +65,7 @@ namespace CodingTracker.Rutwik2005.Controlllers
             return sessionId;
         }
 
-        public static bool switchmenu()
+        public static bool Switchmenu()
         {
             bool flag = true;
             DateTime startTime;

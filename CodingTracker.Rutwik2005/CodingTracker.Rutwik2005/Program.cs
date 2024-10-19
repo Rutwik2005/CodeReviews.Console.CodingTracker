@@ -25,9 +25,9 @@ class Program
         }
         bool flag = true;
         while (flag)
-        {   string inp;
+        {
             Display.DisplayMenu();
-            flag = UserInput.switchmenu();
+            flag = UserInput.Switchmenu();
         }
     }
    
